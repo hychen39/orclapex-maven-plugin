@@ -3,7 +3,7 @@ Oracle APEX Maven plugin
 
 A Maven plugin for Oracle Application Express development
 
-##About
+## About
 
 The primary goal of the Oracle APEX Maven plugin is to streamline and facilitate the build process for APEX applications.
 
@@ -17,17 +17,17 @@ The following tasks are currently being worked on:
 * Compile a target database schema and invalid database objects notification.
 * Automatically generate TAPI (Table API) packages.
 
-##Installation
+## Installation
 
 - Download the latest release of the Oracle APEX Maven plugin.
 - Unzip the downloaded archive file.
 - Open a terminal window and change the directory to the unzipped orclapex-maven-plugin folder.
 - Install the JAR file in your Maven repository: <code>mvn install:install-file -Dfile=orclapex-maven-plugin-1.0.3.jar -DpomFile=orclapex-maven-plugin-1.0.3-pom.xml</code>
 
-##Blog posts
+## Blog posts
 
 * http://apexplained.wordpress.com/2014/04/08/introducing-the-oracle-apex-maven-plugin/
 
-##License
+## License
 
 See LICENSE.md
