@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -18,42 +19,42 @@ import org.apache.maven.plugins.annotations.Parameter;
  * http://www.naturaldocs.org/
  */
 @Mojo(name = "run-natural-docs",
-defaultPhase = LifecyclePhase.COMPILE)
+        defaultPhase = LifecyclePhase.COMPILE)
 public class NaturalDocsMojo extends AbstractMojo {
 
     /**
      * The path to the folder containing the Natural Docs executable.
      */
     @Parameter(property = "run-natural-docs.naturalDocsHome",
-    required = true)
+            required = true)
     private File naturalDocsHome;
     /**
      * Natural Docs will build the documentation from the files in these
      * directories and all its subdirectories. It is possible to specify
      * multiple directories.
      */
-    @Parameter(property = "run-natural-docs.inputSourceDirectories",
-    required = true)
+    @Parameter(property = "run-natural-docs.inputSourceDirectories" /*,
+            required = true*/)
     private List<File> inputSourceDirectories;
     /**
      * The output format. The supported formats are HTML and FramedHTML.
      */
-    @Parameter(property = "run-natural-docs.outputFormat",
-    required = true)
+    @Parameter(property = "run-natural-docs.outputFormat"
+            /*,required = true*/)
     private String outputFormat;
     /**
      * The folder in which Natural Docs will generate the technical
      * documentation.
      */
-    @Parameter(property = "run-natural-docs.outputDirectory",
-    required = true)
+    @Parameter(property = "run-natural-docs.outputDirectory"
+            /*, required = true*/)
     private File outputDirectory;
     /**
      * Natural Docs needs a place to store the project's specific configuration
      * and data files.
      */
-    @Parameter(property = "run-natural-docs.projectDirectory",
-    required = true)
+    @Parameter(property = "run-natural-docs.projectDirectory"
+            /*, required = true*/)
     private File projectDirectory;
     /**
      * Excludes a subdirectory from being scanned. You can specify it multiple
@@ -95,6 +96,20 @@ public class NaturalDocsMojo extends AbstractMojo {
      */
     @Parameter(property = "run-natural-docs.quiet")
     private boolean quiet;
+
+    /**
+     * The executable file of the NaturalDoc, including the full path.
+     * Example: "C:\\NaturalDocs\\NaturalDocs.exe";
+     */
+    @Parameter(property = "run-natural-docs.naturalDocExe", required = true)
+    private String naturalDocExe;
+
+    /**
+     * Configure folder for the NaturalDoc 2.0
+     */
+    @Parameter(property = "run-natural-docs.configFolder")
+    private String configFolder;
+
     // unsupported optional parameters:
     //   --images / --style / --tab-length / --highlight
 
@@ -102,37 +117,56 @@ public class NaturalDocsMojo extends AbstractMojo {
      * The method called by Maven when the 'run-natural-docs' goal gets
      * executed.
      */
-    @Override
+
     public void execute() throws MojoExecutionException, MojoFailureException {
+        // New parameters to running NaturalDOc 2.0
+        // Run the natural doc using java
+//        naturalDocExe = "C:\\NaturalDocs\\NaturalDocs.exe";
+//        File naturalDocHome = new File("C:\\NaturalDocs");
+//        String configFolder = "D:\\apex_prj\\im_space_mgt_sys_maven\\natural_doc_config";
+        //
         ProcessBuilder processBuilder;
-        Process process;
         List<String> commandLineArguments = new ArrayList<String>();
-        String output;
 
-        String perlExecutable = "perl";
-        String NaturalDocsExecutable = "NaturalDocs";
-        String commandToExecute = "";
 
+//        String output;
+
+//        String perlExecutable = "perl";
+//        String NaturalDocsExecutable = "NaturalDocs";
+
+    // debug show parameters
+        getLog().debug("Exec:" + naturalDocExe);
+        getLog().debug("configFolder:" + configFolder);
+
+        // validate parameters
         validateParameters();
+//
+//        if (System.getProperty("os.name").toLowerCase().startsWith("win")) {
+//            perlExecutable += ".exe";
+//        }
 
-        if (System.getProperty("os.name").toLowerCase().startsWith("win")) {
-            perlExecutable += ".exe";
+        // make the command line arguments
+        commandLineArguments.add(naturalDocExe);
+
+
+//        commandLineArguments.add(perlExecutable);
+//        commandLineArguments.add(NaturalDocsExecutable);
+
+        // required parameters for using Natural Doc 1.x version.
+        if (configFolder == null) {
+            for (int i = 0; i < inputSourceDirectories.size(); i++) {
+                commandLineArguments.add("-i");
+                commandLineArguments.add(inputSourceDirectories.get(i).getPath());
+            }
+            commandLineArguments.add("-o");
+            commandLineArguments.add(outputFormat);
+            commandLineArguments.add(outputDirectory.getPath());
+            commandLineArguments.add("-p");
+            commandLineArguments.add(projectDirectory.getPath());
+        } else {
+            // use the config folder for using Natural Doc 2.x version.
+            commandLineArguments.add(configFolder);
         }
-
-        commandLineArguments.add(perlExecutable);
-        commandLineArguments.add(NaturalDocsExecutable);
-
-        // required parameters
-        for (int i = 0; i < inputSourceDirectories.size(); i++) {
-            commandLineArguments.add("-i");
-            commandLineArguments.add(inputSourceDirectories.get(i).getPath());
-        }
-        commandLineArguments.add("-o");
-        commandLineArguments.add(outputFormat);
-        commandLineArguments.add(outputDirectory.getPath());
-        commandLineArguments.add("-p");
-        commandLineArguments.add(projectDirectory.getPath());
-
         // optional parameters
         if (excludedSubdirectories != null) {
             for (int i = 0; i < excludedSubdirectories.size(); i++) {
@@ -159,29 +193,37 @@ public class NaturalDocsMojo extends AbstractMojo {
             commandLineArguments.add("-q");
         }
 
-        for (int i = 0; i < commandLineArguments.size(); i++) {
-            commandToExecute += commandLineArguments.get(i).toString() + " ";
-        }
+//        for (int i = 0; i < commandLineArguments.size(); i++) {
+//            commandToExecute += commandLineArguments.get(i).toString() + " ";
+//        }
+        String commandToExecute = commandLineArguments.toString();
         getLog().debug("Executing Natural Docs: " + commandToExecute);
 
+        // Ready to execute
         processBuilder = new ProcessBuilder(commandLineArguments);
         processBuilder.directory(naturalDocsHome);
         processBuilder.redirectErrorStream(true);
 
+        Process process = null;
         try {
             process = processBuilder.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-            BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        // Print out the message for executing results
+        try (BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+//             BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()))
+        ) {
+            String output = null;
             while ((output = stdInput.readLine()) != null) {
                 getLog().info(output);
             }
-            stdInput.close();
-
-            BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-            while ((output = stdError.readLine()) != null) {
-                getLog().info(output);
-            }
-            stdError.close();
+//            stdInput.close();
+//            while ((output = stdError.readLine()) != null) {
+//                getLog().info(output);
+//            }
+//            stdError.close();
         } catch (IOException ex) {
             throw new MojoExecutionException("An unexpected error occurred while executing Natural Docs", ex);
         }
@@ -194,20 +236,27 @@ public class NaturalDocsMojo extends AbstractMojo {
         if (!naturalDocsHome.isDirectory()) {
             throw new MojoExecutionException("The specified naturalDocsHome is not a folder: " + naturalDocsHome.getAbsolutePath());
         }
-        for (int i = 0; i < inputSourceDirectories.size(); i++) {
-            if (!inputSourceDirectories.get(i).isDirectory()) {
-                throw new MojoExecutionException("The specified inputSourceDirectory is not a folder: " + inputSourceDirectories.get(i).getAbsolutePath());
+        if (configFolder == null) {
+            // check the input source directory
+            for (int i = 0; i < inputSourceDirectories.size(); i++) {
+                if (!inputSourceDirectories.get(i).isDirectory()) {
+                    throw new MojoExecutionException("The specified inputSourceDirectory is not a folder: " + inputSourceDirectories.get(i).getAbsolutePath());
+                }
+            }
+
+            if (!(outputFormat.toLowerCase().equals("html") || outputFormat.toLowerCase().equals("framedhtml"))) {
+                throw new MojoExecutionException("Unknown output format: " + outputFormat + ". Valid formats are HTML and FramedHTML.");
+            }
+
+            if (!outputDirectory.isDirectory()) {
+                throw new MojoExecutionException("The specified outputDirectory is not a folder: " + outputDirectory.getAbsolutePath());
+            }
+            if (!projectDirectory.isDirectory()) {
+                throw new MojoExecutionException("The specified projectDirectory is not a folder: " + projectDirectory.getAbsolutePath());
             }
         }
-        if (!(outputFormat.toLowerCase().equals("html") || outputFormat.toLowerCase().equals("framedhtml"))) {
-            throw new MojoExecutionException("Unknown output format: " + outputFormat + ". Valid formats are HTML and FramedHTML.");
-        }
-        if (!outputDirectory.isDirectory()) {
-            throw new MojoExecutionException("The specified outputDirectory is not a folder: " + outputDirectory.getAbsolutePath());
-        }
-        if (!projectDirectory.isDirectory()) {
-            throw new MojoExecutionException("The specified projectDirectory is not a folder: " + projectDirectory.getAbsolutePath());
-        }
+
+
         for (int i = 0; i < excludedSubdirectories.size(); i++) {
             if (!excludedSubdirectories.get(i).isDirectory()) {
                 throw new MojoExecutionException("The specified excludedSubdirectory is not a folder: " + excludedSubdirectories.get(i).getAbsolutePath());

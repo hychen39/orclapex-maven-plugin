@@ -1,0 +1,41 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.hychen39</groupId>
+    <artifactId>orclapex_test-maven-plugin</artifactId>
+    <packaging>maven-plugin</packaging>
+    <version>1.0</version>
+    <name>test-orclapex-maven-plugin</name>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.contribute</groupId>
+                <artifactId>orclapex-maven-plugin</artifactId>
+                <version>1.0.4</version>
+
+                <configuration>
+                    <naturalDocsHome>C:\NaturalDocs</naturalDocsHome>
+                    <naturalDocExe>C:\NaturalDocs\NaturalDocs.exe</naturalDocExe>
+                    <configFolder>D:\apex_prj\im_space_mgt_sys_maven\natural_doc_config</configFolder>
+                    <!--<inputSourceDirectories>-->
+                    <!--<inputSourceDirectory>D:\apex_prj\im_space_mgt_sys_maven\src\main\database</inputSourceDirectory>-->
+                    <!--</inputSourceDirectories>-->
+                    <!--<outputFormat>FramedHTML</outputFormat>-->
+                    <!--<outputDirectory>src/main/database/technical-docs</outputDirectory>-->
+                    <!--<projectDirectory>src/main/database/technical-docs/settings</projectDirectory>-->
+                    <!--<rebuild>true</rebuild>-->
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>generate-natural-docs</id>
+                        <goals>
+                            <goal>run-natural-docs</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
