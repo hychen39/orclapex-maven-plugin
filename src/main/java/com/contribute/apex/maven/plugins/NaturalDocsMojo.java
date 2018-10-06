@@ -129,10 +129,6 @@ public class NaturalDocsMojo extends AbstractMojo {
         List<String> commandLineArguments = new ArrayList<String>();
 
 
-//        String output;
-
-//        String perlExecutable = "perl";
-//        String NaturalDocsExecutable = "NaturalDocs";
 
     // debug show parameters
         getLog().debug("Exec:" + naturalDocExe);
@@ -140,17 +136,9 @@ public class NaturalDocsMojo extends AbstractMojo {
 
         // validate parameters
         validateParameters();
-//
-//        if (System.getProperty("os.name").toLowerCase().startsWith("win")) {
-//            perlExecutable += ".exe";
-//        }
 
         // make the command line arguments
         commandLineArguments.add(naturalDocExe);
-
-
-//        commandLineArguments.add(perlExecutable);
-//        commandLineArguments.add(NaturalDocsExecutable);
 
         // required parameters for using Natural Doc 1.x version.
         if (configFolder == null) {
@@ -167,6 +155,7 @@ public class NaturalDocsMojo extends AbstractMojo {
             // use the config folder for using Natural Doc 2.x version.
             commandLineArguments.add(configFolder);
         }
+
         // optional parameters
         if (excludedSubdirectories != null) {
             for (int i = 0; i < excludedSubdirectories.size(); i++) {
@@ -193,9 +182,6 @@ public class NaturalDocsMojo extends AbstractMojo {
             commandLineArguments.add("-q");
         }
 
-//        for (int i = 0; i < commandLineArguments.size(); i++) {
-//            commandToExecute += commandLineArguments.get(i).toString() + " ";
-//        }
         String commandToExecute = commandLineArguments.toString();
         getLog().debug("Executing Natural Docs: " + commandToExecute);
 
@@ -212,18 +198,12 @@ public class NaturalDocsMojo extends AbstractMojo {
         }
 
         // Print out the message for executing results
-        try (BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
-//             BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()))
+        try (BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()))
         ) {
             String output = null;
             while ((output = stdInput.readLine()) != null) {
                 getLog().info(output);
             }
-//            stdInput.close();
-//            while ((output = stdError.readLine()) != null) {
-//                getLog().info(output);
-//            }
-//            stdError.close();
         } catch (IOException ex) {
             throw new MojoExecutionException("An unexpected error occurred while executing Natural Docs", ex);
         }
