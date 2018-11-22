@@ -13,7 +13,7 @@
             <plugin>
                 <groupId>com.contribute</groupId>
                 <artifactId>orclapex-maven-plugin</artifactId>
-                <version>1.0.4</version>
+                <version>1.0.4.1</version>
 
                 <configuration>
                     <naturalDocsHome>C:\NaturalDocs</naturalDocsHome>

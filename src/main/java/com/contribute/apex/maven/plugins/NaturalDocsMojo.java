@@ -144,8 +144,6 @@ public class NaturalDocsMojo extends AbstractMojo {
 
     // debug show parameters
         String fullNaturalDocExec = naturalDocsHome + File.separator + naturalDocExe;
-        if (runOnMono)
-            fullNaturalDocExec = "mono " + fullNaturalDocExec;
 
         String fullConfigFolder = projectDirectory != null? projectDirectory + File.separator + configFolder :
                                     configFolder;
@@ -155,7 +153,11 @@ public class NaturalDocsMojo extends AbstractMojo {
         // validate parameters
         validateParameters();
 
+
         // make the command line arguments
+        if (runOnMono)
+            commandLineArguments.add("mono");
+
         commandLineArguments.add(fullNaturalDocExec);
 
         // required parameters for using Natural Doc 1.x version.
