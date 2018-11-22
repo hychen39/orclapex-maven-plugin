@@ -21,6 +21,7 @@
                     <!--<projectDirectory>D:\apex_prj\im_space_mgt_sys_maven\</projectDirectory>-->
                     <workingDirectory>D:\apex_prj\im_space_mgt_sys_maven\</workingDirectory>
                     <configFolder>natural_doc_config</configFolder>
+                    <runOnMono>true</runOnMono>
                     <!--<inputSourceDirectories>-->
                     <!--<inputSourceDirectory>D:\apex_prj\im_space_mgt_sys_maven\src\main\database</inputSourceDirectory>-->
                     <!--</inputSourceDirectories>-->

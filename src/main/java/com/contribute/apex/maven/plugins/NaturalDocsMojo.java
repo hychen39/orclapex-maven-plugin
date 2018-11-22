@@ -117,6 +117,11 @@ public class NaturalDocsMojo extends AbstractMojo {
     @Parameter(property = "run-natural-docs.configFolder")
     private String configFolder;
 
+    /**
+     * Run on the Mono platform
+     */
+    @Parameter(property = "run-natural-docs.runOnMono")
+    private boolean runOnMono;
     // unsupported optional parameters:
     //   --images / --style / --tab-length / --highlight
 
@@ -139,6 +144,9 @@ public class NaturalDocsMojo extends AbstractMojo {
 
     // debug show parameters
         String fullNaturalDocExec = naturalDocsHome + File.separator + naturalDocExe;
+        if (runOnMono)
+            fullNaturalDocExec = "mono " + fullNaturalDocExec;
+
         String fullConfigFolder = projectDirectory != null? projectDirectory + File.separator + configFolder :
                                     configFolder;
         getLog().debug("Exec:" + fullNaturalDocExec);

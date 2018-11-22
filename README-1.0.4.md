@@ -31,7 +31,7 @@ Serveral parameters are added for using the `run-natural-docs` goal in the `orcl
     If `projectDirectory` is specified, the full path for the configuration folder is 
     `projectDirectory` + `File.seperator()` + `natural_doc_config`  
 - `workingDirectory`: the working directory. Use the parameter to specify a new working directory.
-
+- `runOnMono`: Use MS Mono platform to run exe file in the linux environment (for NaturalDocs 2.X). 
 ### Java Version required to compile the source codes.
 
 Java 7 or after.
