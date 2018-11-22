@@ -23,11 +23,14 @@ to learn more.
 
 ### Added parameters
 
-Two parameters are added for using the `run-natural-docs` goal in the `orclapex` plugin. They are:
+Serveral parameters are added for using the `run-natural-docs` goal in the `orclapex` plugin. They are:
 
-- `naturalDocExe`: the full name for the NaturalDocs runnable file, for example: `C:\NaturalDocs\NaturalDocs.exe`.
-- `configFolder`: the configuration folder for using the NaturalDocs, for example: `D:\apex_prj\natural_doc_config` 
-
+- `naturalDocExe`: the NaturalDocs runnable file. The full path is obtained by concatenating `naturalDocsHome` 
+  and `naturalDocExe`.
+- `configFolder`: the configuration folder for using the NaturalDocs, for example: `natural_doc_config`. 
+    If `projectDirectory` is specified, the full path for the configuration folder is 
+    `projectDirectory` + `File.seperator()` + `natural_doc_config`  
+- `workingDirectory`: the working directory. Use the parameter to specify a new working directory.
 
 ### Java Version required to compile the source codes.
 

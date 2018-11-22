@@ -17,8 +17,10 @@
 
                 <configuration>
                     <naturalDocsHome>C:\NaturalDocs</naturalDocsHome>
-                    <naturalDocExe>C:\NaturalDocs\NaturalDocs.exe</naturalDocExe>
-                    <configFolder>D:\apex_prj\im_space_mgt_sys_maven\natural_doc_config</configFolder>
+                    <naturalDocExe>NaturalDocs.exe</naturalDocExe>
+                    <!--<projectDirectory>D:\apex_prj\im_space_mgt_sys_maven\</projectDirectory>-->
+                    <workingDirectory>D:\apex_prj\im_space_mgt_sys_maven\</workingDirectory>
+                    <configFolder>natural_doc_config</configFolder>
                     <!--<inputSourceDirectories>-->
                     <!--<inputSourceDirectory>D:\apex_prj\im_space_mgt_sys_maven\src\main\database</inputSourceDirectory>-->
                     <!--</inputSourceDirectories>-->

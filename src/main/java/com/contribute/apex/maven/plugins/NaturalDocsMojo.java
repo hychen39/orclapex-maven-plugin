@@ -57,6 +57,13 @@ public class NaturalDocsMojo extends AbstractMojo {
             /*, required = true*/)
     private File projectDirectory;
     /**
+     * Working directory to execute.
+     *
+     */
+    @Parameter(property = "run-natural-docs.workingDirectory"
+            /*, required = true*/)
+    private File workingDirectory;
+    /**
      * Excludes a subdirectory from being scanned. You can specify it multiple
      * times to exclude multiple subdirectories.
      */
@@ -131,14 +138,17 @@ public class NaturalDocsMojo extends AbstractMojo {
 
 
     // debug show parameters
-        getLog().debug("Exec:" + naturalDocExe);
-        getLog().debug("configFolder:" + configFolder);
+        String fullNaturalDocExec = naturalDocsHome + File.separator + naturalDocExe;
+        String fullConfigFolder = projectDirectory != null? projectDirectory + File.separator + configFolder :
+                                    configFolder;
+        getLog().debug("Exec:" + fullNaturalDocExec);
+        getLog().debug("configFolder:" + fullConfigFolder);
 
         // validate parameters
         validateParameters();
 
         // make the command line arguments
-        commandLineArguments.add(naturalDocExe);
+        commandLineArguments.add(fullNaturalDocExec);
 
         // required parameters for using Natural Doc 1.x version.
         if (configFolder == null) {
@@ -153,7 +163,7 @@ public class NaturalDocsMojo extends AbstractMojo {
             commandLineArguments.add(projectDirectory.getPath());
         } else {
             // use the config folder for using Natural Doc 2.x version.
-            commandLineArguments.add(configFolder);
+            commandLineArguments.add(fullConfigFolder);
         }
 
         // optional parameters
@@ -187,7 +197,12 @@ public class NaturalDocsMojo extends AbstractMojo {
 
         // Ready to execute
         processBuilder = new ProcessBuilder(commandLineArguments);
-        processBuilder.directory(naturalDocsHome);
+        getLog().debug("Current working directory: " + System.getProperty("user.dir"));
+
+        if (workingDirectory != null) {
+            getLog().debug("New working directory specified by the <workingDirectory> tag: " + workingDirectory.toString());
+            processBuilder.directory(workingDirectory);
+        }
         processBuilder.redirectErrorStream(true);
 
         Process process = null;
