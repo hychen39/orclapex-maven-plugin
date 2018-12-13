@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.contribute</groupId>
@@ -9,6 +9,11 @@
     <name>orclapex-maven-plugin</name>
     <url>https://github.com/nbuytaert1/orclapex-maven-plugin</url>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
     <developers>
         <developer>
             <id>buytani</id>
@@ -16,19 +21,15 @@
             <email>nbuytaert1@gmail.com</email>
             <url>http://apexplained.wordpress.com/</url>
         </developer>
-    </developers>
-    <contributors>
-        <contributor>
+        <developer>
+        <id>hychen39</id>
             <name>Hung-Yi Chen</name>
             <email>hychen39@gmail.com</email>
             <url>https://hychen39.github.io</url>
-            <organization>Department of Information Management, Chaoyang University of Technology</organization>
-            <roles>
-                <role>Developer - Make the NaturalDocsMojo can use NaturalDocs 2.x</role>
-            </roles>
             <timezone>Asia/Taipei</timezone>
-        </contributor>
-    </contributors>
+        </developer>
+    </developers>
+    
 
     <dependencies>
         <dependency>
@@ -91,14 +92,58 @@
                 <version>2.7</version>
             </plugin>
 
-            <plugin>
+            <!-- <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.9.1</version>
                 <configuration>
                     <show>private</show>
                 </configuration>
+            </plugin> -->
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.7.1</version>
+                <dependencies>
+                    <dependency>
+                        <!-- add support for ssh/scp -->
+                        <groupId>org.apache.maven.wagon</groupId>
+                        <artifactId>wagon-ssh</artifactId>
+                        <version>1.0</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.0.1</version>
+                <!--Remove the classpath environment variable-->
+                <!--Ref: https://stackoverflow.com/a/13278628/7820390-->
+                <configuration>
+                    <additionalOptions>
+                        <additionalOption>-Xdoclint:none</additionalOption>
+                    </additionalOptions>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>3.0.0-M1</version>
+            </plugin>
+        </plugins>
+    </reporting>
+
+    <!--Deployment-->
+    <distributionManagement>
+        <site>
+            <id>l746.cyut.edu.tw</id>
+            <url>scp://steven@l746/var/www/html/orclapex</url>
+        </site>
+    </distributionManagement>
 </project>
