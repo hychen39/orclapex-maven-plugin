@@ -5,7 +5,7 @@
   name="Program Unit Text Replacer" >
 <body>
 
-<menu name="Abount">
+<menu name="About">
     <item name="Introduction" href="index.html" />
 </menu>
 <!-- Inject by maven -->
